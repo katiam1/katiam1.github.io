@@ -4,7 +4,7 @@
         <meta charset="utf-8"> 
         <meta name="viewport" content="width=device-width, maximum-scale=1.0" />
 
-        <title>Example Student's HCDE 439 Physical Computing Page!</title> 
+        <title>Katia's HCDE 439 Physical Computing Page!</title>
 
         <link href="style.css" media="screen" rel="stylesheet" type="text/css" />
 
@@ -12,12 +12,65 @@
     <body> 
 
         <div class="header">
-            <h1>Example Student's Assignment 2!</h1>
+            <h1>Katia's Assignment 2! Fade!</h1>
             <p>
-            <img src="red-panda.jpg" width=400></a>
+            <img src="A2Schematic.jpg" width=400></a>
             </p>
             <p>
-            Here is all the documentation for assignment 2!
+            <video width="600" autoplay muted>
+            <source src="A2gif.mp4" type="video/mp4">
+            </video>
+            </p>
+            <pre>
+                <code>
+                    // the setup function runs once when you press reset or power the board
+                    // I used the Blink example on arduino IDE to help remember the language,
+                    void setup() {
+                        // initialize digital pin LED_BUILTIN as an output.
+                        for (int i = 11; i < 14; i++) { // loops through the three outputs that are connected to my LEDs
+                            pinMode(i, OUTPUT); // initialize digital pin i as an output.
+                        }
+                    }
+
+                    // the loop function runs over and over again forever
+                    void loop() {
+                        for ( int i = 11; i < 14; i++) { // loops through the three outputs that are connected to my LEDs
+                            digitalWrite(i, HIGH);  // turn the LED connected to i on (HIGH is the voltage level)
+                            delay(1000);                      // wait for a second
+                            digitalWrite(i, LOW);   // turn the LED connected to i off by making the voltage LOW (0 volts)
+                            delay(1000);                      // wait for a second
+                        }
+                    }
+                </code>
+            </pre>
+            <p>
+                Calculations:
+
+                V = I * R
+
+                Red: 5V-1.8V = 3.2V
+                3.2 = 20mA * R
+                3.2/0.02 = R
+                R = 160 ohms
+                I chose a resistor with 330 ohms:
+                V/I has to be less than 30mA
+                3.2/330 = 9.7mA so it works but will be dim, I can't go down to 100ohms because 3.2/100 = 32.0mA which is above 30mA
+
+                Yellow: 5V-1.8V = 3.2V
+                3.2 = 20mA * R
+                3.2/0.02 = R
+                R = 160 ohms
+                I chose a resistor with 330 ohms:
+                V/I has to be less than 30mA
+                3.2/330 = 9.7mA so it works but will be dim, I can't go down to 100ohms because 3.2/100 = 32.0mA which is above 30mA
+
+                Blue: 5V-3.3V = 1.7V
+                1.7 = 20mA * R
+                1.7/0.02 = R
+                R = 85 ohms
+                I chose a resistor with 220 ohms:
+                V/I has to be less than 30mA
+                1.7/220 = 7.7mA so it works but will be dim, I can't go down to 10ohms because 1.7/10 = 170.0mA which is above 30m
             </p>
         </div>
         

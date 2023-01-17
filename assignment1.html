@@ -4,14 +4,14 @@
         <meta charset="utf-8"> 
         <meta name="viewport" content="width=device-width, maximum-scale=1.0" />
 
-        <title>Example Student's HCDE 439 Physical Computing Page!</title> 
+        <title>Katia's HCDE 439 Physical Computing Page!</title>
 
         <link href="style.css" media="screen" rel="stylesheet" type="text/css" />
 
     </head> 
     <body> 
 
-        <div class="Blink!">
+        <div class="header">
             <h1>Katia's Assignment 1! Blink!</h1>
             <p>
             <img src="A1Schematic.jpg" width=400></a>
@@ -44,7 +44,33 @@
                 </code>
             </pre>
             <p>
-            <img src="A1Schematic.jpg" width=400></a>
+                Calculations:
+
+                V = I * R
+
+                Red: 5V-1.8V = 3.2V
+                3.2 = 20mA * R
+                3.2/0.02 = R
+                R = 160 ohms
+                I chose a resistor with 330 ohms:
+                V/I has to be less than 30mA
+                3.2/330 = 9.7mA so it works but will be dim, I can't go down to 100ohms because 3.2/100 = 32.0mA which is above 30mA
+
+                Yellow: 5V-1.8V = 3.2V
+                3.2 = 20mA * R
+                3.2/0.02 = R
+                R = 160 ohms
+                I chose a resistor with 330 ohms:
+                V/I has to be less than 30mA
+                3.2/330 = 9.7mA so it works but will be dim, I can't go down to 100ohms because 3.2/100 = 32.0mA which is above 30mA
+
+                Blue: 5V-3.3V = 1.7V
+                1.7 = 20mA * R
+                1.7/0.02 = R
+                R = 85 ohms
+                I chose a resistor with 220 ohms:
+                V/I has to be less than 30mA
+                1.7/220 = 7.7mA so it works but will be dim, I can't go down to 10ohms because 1.7/10 = 170.0mA which is above 30m
             </p>
         </div>
         
