@@ -23,23 +23,33 @@
             </p>
             <pre>
                 <code>
-                    // the setup function runs once when you press reset or power the board
-                    // I used the Blink example on arduino IDE to help remember the language,
+                    int brightness = 0;  // how bright the LED is
+                    int fadeAmount = 5;  // how many points to fade the LED by
+
+                    // the setup routine runs once when you press reset:
                     void setup() {
-                        // initialize digital pin LED_BUILTIN as an output.
-                        for (int i = 11; i < 14; i++) { // loops through the three outputs that are connected to my LEDs
-                            pinMode(i, OUTPUT); // initialize digital pin i as an output.
-                        }
+                      pinMode(10, OUTPUT);   // declare pin 10 to be an output
+                      pinMode(11, OUTPUT);   // declare pin 11 to be an output
+                      pinMode(9, OUTPUT);    // declare pin 9 to be an output
+                      pinMode(3, INPUT);     // declare pin 3 to be an input
                     }
 
-                    // the loop function runs over and over again forever
+                    // the loop routine runs over and over again forever:
                     void loop() {
-                        for ( int i = 11; i < 14; i++) { // loops through the three outputs that are connected to my LEDs
-                            digitalWrite(i, HIGH);  // turn the LED connected to i on (HIGH is the voltage level)
-                            delay(1000);                      // wait for a second
-                            digitalWrite(i, LOW);   // turn the LED connected to i off by making the voltage LOW (0 volts)
-                            delay(1000);                      // wait for a second
+                      if (digitalRead(3) == HIGH){ // if digitalRead says button is on (HIGH) then it goes into if statement
+                        for (brightness = 250; brightness >= 0; brightness --){ // loops through brightness values
+                          analogWrite(10, brightness);  // set the brightness of pin 10
+                          analogWrite(11, brightness);  // set the brightness of pin 11
+                          delay(10);            // wait for 10 milliseconds to see the dimming effect
                         }
+                      } else { // if button is off (LOW) it goes into else statement
+                          analogWrite(10, 0); // ensures both LEDs are off for the start of the sequence
+                          analogWrite(11, 0); // ensures both LEDs are off for the start of the sequence
+                          digitalWrite(9, HIGH);  // turn the LED connected to i on (HIGH is the voltage level)
+                          delay(1000);                      // wait for a second
+                          digitalWrite(9, LOW);   // turn the LED connected to i off by making the voltage LOW (0 volts)
+                          delay(1000);                      // wait for a second
+                      }
                     }
                 </code>
             </pre>
@@ -47,30 +57,44 @@
                 Calculations:
 
                 V = I * R
-
-                Red: 5V-1.8V = 3.2V
-                3.2 = 20mA * R
-                3.2/0.02 = R
-                R = 160 ohms
-                I chose a resistor with 330 ohms:
-                V/I has to be less than 30mA
-                3.2/330 = 9.7mA so it works but will be dim, I can't go down to 100ohms because 3.2/100 = 32.0mA which is above 30mA
-
-                Yellow: 5V-1.8V = 3.2V
-                3.2 = 20mA * R
-                3.2/0.02 = R
-                R = 160 ohms
-                I chose a resistor with 330 ohms:
-                V/I has to be less than 30mA
-                3.2/330 = 9.7mA so it works but will be dim, I can't go down to 100ohms because 3.2/100 = 32.0mA which is above 30mA
-
-                Blue: 5V-3.3V = 1.7V
-                1.7 = 20mA * R
-                1.7/0.02 = R
-                R = 85 ohms
-                I chose a resistor with 220 ohms:
-                V/I has to be less than 30mA
-                1.7/220 = 7.7mA so it works but will be dim, I can't go down to 10ohms because 1.7/10 = 170.0mA which is above 30m
+            </p>
+            <p>
+                Red LED Resistor:
+                    5V-1.8V = 3.2V
+                    3.2 = 20mA * R
+                    3.2/0.02 = R
+                    R = 160 ohms
+                    Closest resistor I have above it is 220 ohms:
+                    V/I has to be less than 30mA
+                    3.2/220 = 14.5mA so it works the best, I can't go down to 100ohms because 3.2/100 = 32.0mA which is above 30mA
+            </p>
+            <p>
+                Green LED Resistor:
+                    5V-1.8V = 3.2V
+                    3.2 = 20mA * R
+                    3.2/0.02 = R
+                    R = 160 ohms
+                    Closest resistor I have above it is 220 ohms:
+                    V/I has to be less than 30mA
+                    3.2/220 = 14.5mA so it works the best, I can't go down to 100ohms because 3.2/100 = 32.0mA which is above 30mA
+            </p>
+            <p>
+                5V-3.3V = 1.7V
+                    1.7 = 20mA * R
+                    1.7/0.02 = R
+                    R = 85 ohms
+                    Closest resistor I have above it is 100 ohms:
+                    V/I has to be less than 30mA
+                    1.7/100 = 17.0mA so it works the best, I can't go down to 10ohms because 1.7/10 = 170.0mA which is above 30mA
+            </p>
+            <p>
+                Button Resistor:
+                Max current rating 50mA https://octopart.com/95c06e4t-grayhill-6620670?r=sp
+                https://forum.arduino.cc/t/why-10k-resistor-for-a-push-button/434354/4
+                Using a 10K resistor
+                max current you can pull from an arduino is 250mA, so you need to select a resistor that minimizes the energy consumption and also doesnt pull 250mA
+                5V = 0.25 * R
+                5/0.25 = 20 ohms, so the minimum resistance I need to protect my arduino uno is 20, but since I also want to use very little energy for it, I am choosing to use 10k ohms.
             </p>
         </div>
         
