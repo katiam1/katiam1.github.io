@@ -23,37 +23,112 @@
             </p>
             <pre>
                 <code>
-                    #include < CapacitiveSensor.h> // Adds Capacitive Sensor Library
+                    #include < Servo.h>
 
-CapacitiveSensor   cs_4_2 = CapacitiveSensor(10,11);    	// 1 megohm resistor between pins 10 & 11, pin 11 is sensor pin, add wire, metal thing
+Servo myservo;  // create servo object to control a servo
+// twelve servo objects can be created on most boards
 
+int pos = 0;    // variable to store the servo position
 
 void setup() {
-  // put your setup code here, to run once:
-  cs_4_2.set_CS_AutocaL_Millis(0xFFFFFFFF); 	// turn off autocalibrate on channel 1 - just as an example
-  Serial.begin(9600); // initiates the serial monitor output
-  pinMode(9, OUTPUT); //initiates pin 9 as output
+  Serial.begin(9600);	// initialize serial communications
+  Serial.setTimeout(10); // set the timeout for parseInt
+  myservo.attach(5);  // attaches the servo on pin 5 to the servo object
 
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-  // capacitive sensing with spoon part
-  long start = millis();  // Tracks starting time as milliseconds since program started running
-	long total1 =  cs_4_2.capacitiveSensor(30); // Gets capacitance total and makes it a variable for use
+ if (Serial.available() > 0) {   // if there's serial data
+ 	int inByte = Serial.read(); // read it
+ 	Serial.write(inByte);  	// send it back out as raw binary data
+  myservo.write(inByte);              // tell servo to go to position
+  delay (15); // let servo catch up with 15 millisecond delay
+ }
+}
+                </code>
+            </pre>
+            <pre>
+                <code>
+                    var serial; // variable to hold an instance of the serialport library
+var portName = 'COM10'; //rename to the name of your port
+var inData;
 
-	Serial.print(millis() - start);    	// check on performance in milliseconds
-	Serial.print("\t");                	// tab character for debug window spacing
 
-	Serial.println(total1); // print sensor output 1
+function setup() {
+    serial = new p5.SerialPort();       // make a new instance of the serialport library
+    serial.on('list', printList);       // set a callback function for the serialport list event
+    serial.on('connected', serverConnected); // callback for connecting to the server
+    serial.on('open', portOpen);        // callback for the port opening
+    serial.on('data', serialEvent);     // callback for when new data arrives
+    serial.on('error', serialError);    // callback for errors
+    serial.on('close', portClose);      // callback for the port closing
 
-  if (total1 > 201){ //checks if the capacitance value is greater than 201
-    // LED strip large load part
-    analogWrite(9, 201);    //turns on led to 201 out of 255
+    console.log("muffin");
+    serial.list();                      // list the serial ports
+    serial.open(portName);              // open a serial port
+    createCanvas(1200, 800);
+}
+
+// get the list of ports:
+function printList(portList) {
+    // portList is an array of serial port names
+    for (var i = 0; i < portList.length; i++) {
+	// Display the list the console:
+	print(i + " " + portList[i]);
+    }
+}
+
+function serverConnected() {
+    print('connected to server.');
+}
+
+function portOpen() {
+    print('the serial port opened.')
+}
+
+function serialError(err) {
+    print('Something went wrong with the serial port. ' + err);
+}
+
+function portClose() {
+    print('The serial port closed.');
+}
+
+function serialEvent() {
+  if (serial.available()) {
+	   //inData = serial.read();
+     inData = mouseY;
+	   console.log("got back " + inData);
+    }
+  if (serial.available()) {
+    let maybeNumber = parseInt(serial.readLine());
+    if (!isNaN(maybeNumber)) {
+        inData = maybeNumber;
+        console.log(inData);
+    }
   }
+}
 
-	delay(10);                         	// arbitrary delay to limit data to serial port
+function keyPressed() {
+    console.log("writing key");
+    serial.write(key);
+}
 
+function draw() {
+    background(0);
+    fill(255);
+    //text("inData: " + inData, 30, 30);
+    text("inData: " + mouseY, 30, 30);
+    let mapMY = map(mouseY, 0, 744, 0, 180);
+    serial.write(mapMY);
+}
+
+function rotate() {
+    background(0);
+    fill(255);
+    text("inData: " + inData, 30, 30);
+    elipse(300, 300, 20, 20);
+    translate(mouseX, mouseY);
 }
                 </code>
             </pre>
