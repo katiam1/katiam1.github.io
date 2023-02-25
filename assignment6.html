@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, maximum-scale=1.0" />
+
+        <title>Katia's HCDE 439 Physical Computing Page!</title>
+
+        <link href="style.css" media="screen" rel="stylesheet" type="text/css" />
+
+    </head>
+    <body>
+
+        <div class="header">
+            <h1>Katia's Assignment 6! Talking to the Web!</h1>
+            <p>
+            <img src="A5schematic.jpg" width=400></a>
+            </p>
+            <p>
+            <video width="600" autoplay muted>
+            <source src="A6gif.mp4" type="video/mp4">
+            </video>
+            </p>
+            <pre>
+                <code>
+                    #include < CapacitiveSensor.h> // Adds Capacitive Sensor Library
+
+CapacitiveSensor   cs_4_2 = CapacitiveSensor(10,11);    	// 1 megohm resistor between pins 10 & 11, pin 11 is sensor pin, add wire, metal thing
+
+
+void setup() {
+  // put your setup code here, to run once:
+  cs_4_2.set_CS_AutocaL_Millis(0xFFFFFFFF); 	// turn off autocalibrate on channel 1 - just as an example
+  Serial.begin(9600); // initiates the serial monitor output
+  pinMode(9, OUTPUT); //initiates pin 9 as output
+
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+  // capacitive sensing with spoon part
+  long start = millis();  // Tracks starting time as milliseconds since program started running
+	long total1 =  cs_4_2.capacitiveSensor(30); // Gets capacitance total and makes it a variable for use
+
+	Serial.print(millis() - start);    	// check on performance in milliseconds
+	Serial.print("\t");                	// tab character for debug window spacing
+
+	Serial.println(total1); // print sensor output 1
+
+  if (total1 > 201){ //checks if the capacitance value is greater than 201
+    // LED strip large load part
+    analogWrite(9, 201);    //turns on led to 201 out of 255
+  }
+
+	delay(10);                         	// arbitrary delay to limit data to serial port
+
+}
+                </code>
+            </pre>
+            <p>
+                Calculations:
+
+                V = I * R
+            </p>
+            <p>
+                White lights with a voltage drop of 3.3, and we have three lights per segment
+12-3*3.3 = 2.1V
+Ohms law for one segment for I
+V = I*R
+I = R/V
+Resistance is 181 on each segment as seen on led strip
+I = 181/2.1 = 86.2
+Find full I for all of the LED strip, each segment is 5cm and the strip the 5meters, so there are 100 5cm segments
+Transistor datasheet, make sure maximum draw is less than 32amps
+            </p>
+        </div>
+
+    </body>
+</html>
