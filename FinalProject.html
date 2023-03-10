@@ -10,11 +10,131 @@
 
     </head>
     <body>
-
+        <h1>Katia's Final Product: Shut the Damn Garage 1.0!</h1>
+            <p>
+            <img src="A4schematic.jpg" width=400></a>
+            </p>
+            <p>
+            <video width="600" autoplay muted>
+            <source src="FPgif.mp4" type="video/mp4">
+            </video>
+            </p>
         <div class="header">
             <p>
-            <img src="FPproposalgif.jpg" width=400></a>
+            <img src="FPpic.jpg" width=400></a>
             </p>
+            <h1>Description</h1>
+            <p>
+                A sensor that lets my roommates and I know when the garage is open. It uses a red light to let us know when the garage is open. The sensor can be stopped from notifying us to prevent the use of excess electricity when we want the garage door open for a long time.
+            </p>
+            <h1>How it Works</h1>
+            <p>
+                The sensor detects the distance in front of it, if the distance is that from it to the ceiling (+-2cm), the door is closed and it does nothing else. If the distance is that from it to the garage (+-2cm), the garage door is open. If it senses the garage door is open, then it will turn on the red LED to notify people that the garage is open. If the garage is open but we don't want it to notify us, you press the button. If the button is pressed the green LED turns on and nothing else happens. It stays in that state until the button turns off.
+            </p>
+            <h1>Project Materials</h1>
+            <ul>
+              <li>Red LED</li>
+              <li>Green LED</li>
+              <li>2 220ohm resistors</li>
+              <li>10K ohm resistor</li>
+              <li>Toggle button</li>
+              <li>12 wires, of various colors including one black and one red</li>
+              <li>Ultrasonic distance sensor</li>
+              <li>9V battery</li>
+              <li>Battery adapter for Arduino</li>
+              <li>Cardboard</li>
+              <li>Masking tape</li>
+              <li>Duct tape</li>
+              <li>Garage</li>
+              <li>Garage door</li>
+              <li>Ceiling</li>
+              <li>Tape measure</li>
+            </ul>
+            <h1>Useful Resources</h1>
+            <ul>
+              <li><a href="https://roboticsbackend.com/arduino-turn-led-on-and-off-with-button/">https://roboticsbackend.com/arduino-turn-led-on-and-off-with-button/</a></li>
+              <li><a href="https://arduinogetstarted.com/tutorials/arduino-ultrasonic-sensor">https://arduinogetstarted.com/tutorials/arduino-ultrasonic-sensor</a></li>
+              <li><a href="https://www.evilmadscientist.com/2012/resistors-for-leds/">https://www.evilmadscientist.com/2012/resistors-for-leds/</a></li>
+              <li><a href="https://makeabilitylab.github.io/physcomp/arduino/buttons.html#:~:text=The%20short%20answer%3A%20use%20a,resistor%20for%20digital%20input%20pins.">https://makeabilitylab.github.io/physcomp/arduino/buttons.html#:~:text=The%20short%20answer%3A%20use%20a,resistor%20for%20digital%20input%20pins.</a></li>
+            </ul>
+            <h1>Math Calculations</h1>
+            <p>Red and Green LED Resistor:</p>
+            <p>5V-1.8V = 3.2V</p>
+            <p>3.2 = 20mA * R</p>
+            <p>3.2/0.02 = R</p>
+            <p>R = 160 ohms</p>
+            <p>Closest resistor I have above it is 220 ohms:</p>
+            <p>V/I has to be less than 30mA</p>
+            <p>3.2/220 = 14.5mA so it works the best, I can't go down to 100ohms because 3.2/100 = 32.0mA which is above 30mA</p>
+            <h1>Steps to Complete</h1>
+            <ol>
+              <li>Measure the distance to the ceiling from the place you will have the ultrasonic distance sensor</li>
+              <li>Measure the distance to the garage door when it is open from the same place as you had above</li>
+              <li>Connect the Red LED using the LED button resource above, but focusing on just the parts that connect the LED and control it</li>
+              <li>Connect the button and LED using the LED on and off with button resource above, ensure it will also stop the red LED from turning on when the green LED is on</li>
+              <li>Connect the Ultrasonic sensor using the resource given, write code to ensure that the sensor makes the red LED turn on when it is within about 2cm from the length that the sensor will sense when connected to the garage system when the garage door is in front of the sensor (garage open)</li>
+              <li>Upload instructions from your computer based on the code you created and connect the battery to the Arduino to power it separate from your computer.</li>
+              <li>Build case for project using masking tape and cardboard allowing for the LEDs to be seen, the button to be pressed, the battery to be changed, and the ultrasonic sensor to look at the distance you are measuring</li>
+              <li>Connect the built project so that it is pointing up at where the garage door will be when opened and the ceiling when it is closed using the duct tape</li>
+            </ol>
+            <pre>
+                <code>
+                    #include <PinButton.h> // button library inclusion
+
+                    int trigPin = 2;    // TRIG pin
+                    int echoPin = 3;    // ECHO pin
+                    int redPin = 12;    // pin where red LED is attached
+                    int greenPin = 13;    // pin where green LED is attached
+                    int ceilingLength = 20; // length to ceiling in cm just for documentation
+                    int garageLength = 8;  // length to garage door when open in cm
+                    float duration_us, distance_cm;   // initializes the distance values to be used
+                    PinButton myButton(7); // connects button to library
+                    const int buttonPin = 7;  // the number of the pushbutton pin
+                    int buttonState = 0;  // variable for reading the pushbutton status
+
+                    void setup() {
+                      Serial.begin (9600);    // begin serial port
+                      pinMode(trigPin, OUTPUT);   // configure the trigger pin to output mode
+                      pinMode(echoPin, INPUT);    // configure the echo pin to input mode
+                      pinMode(12,OUTPUT);   // Initialize pin 12 as output
+                      pinMode(13,OUTPUT);   // Initialize pin 13 as output
+                    }
+
+                    void loop() {
+
+                      buttonState = digitalRead(buttonPin);   // get button state (HIGH/LOW)
+
+                      if (buttonState == HIGH){   // if button state is high
+                        digitalWrite(greenPin, HIGH);   // turn on green LED
+                        digitalWrite(redPin, LOW);   // turn off red LED
+                      } else {    //if button state is low
+                        digitalWrite(greenPin, LOW);    //turn off green LED
+                      }
+
+                      digitalWrite(trigPin, HIGH);    // Ultrasonic sensor powered
+                      delayMicroseconds(10);    // generate 10-microsecond pulse to TRIG pin
+                      digitalWrite(trigPin, LOW);    // Ultrasonic sensor de-powered
+
+                      duration_us = pulseIn(echoPin, HIGH);   // measure duration of pulse from ECHO pin
+                      distance_cm = duration_us * 0.017;
+                      // print the value to Serial Monitor
+                      Serial.print("distance: ");
+                      Serial.print(distance_cm);
+                      Serial.println(" cm");
+
+                      if (distance_cm <= garageLength+2 && distance_cm >= garageLength-2) {  // if the length measured is +-2 from garageHeight
+                        digitalWrite(redPin, HIGH);  // turn the red LED on (HIGH is the voltage level)
+                      }
+
+                      if (distance_cm >= garageLength+2 || distance_cm <= garageLength-2) {  // if the length measured is +-2 from garageHeight
+                        digitalWrite(redPin, LOW);  // turn the red LED off (HIGH is the voltage level)
+                      }
+
+                      delay(500);   //delay for half a second
+
+                    }
+                </code>
+            </pre>
             <p>
             </p>
         </div>
